@@ -1,1 +1,1 @@
-from .main import get_delivery_price
+# from .main import get_delivery_price
