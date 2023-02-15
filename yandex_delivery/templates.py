@@ -18,8 +18,8 @@ def check_price_template(**kwargs) -> dict:
             'taxi_class': kwargs['taxi_class'],
             'same_day_data': {
                 'delivery_interval': {
-                    'from': '2023-01-01T00:00:00+00:00',
-                    'to': '2023-02-01T00:00:00+00:00',
+                    'from': '2023-01-01T00:00:00+00:00', # need to get from user
+                    'to': '2023-02-01T00:00:00+00:00', # also
                 }
             }
 
