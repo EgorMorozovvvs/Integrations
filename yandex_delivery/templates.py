@@ -37,9 +37,52 @@ def get_intervals_during_day_template(**kwargs) -> dict:
     }
     return template
 
+
 def get_tariffs_template(**kwargs) -> dict:
     template = {
         'fullname': kwargs['fullname'],
         'start_point': kwargs['start_point'],
+    }
+    return template
+
+
+def search_ways_of_delivery_templates(**kwargs) -> dict:
+    template = {
+        'senderId': kwargs['sender_id'],
+        'from': kwargs['from'],
+        'to': kwargs['to'],
+        'dimensions': ...,
+        'places': [
+            {
+                'dimensions': {
+                    'length': float,
+                    'width': float,
+                    'height': float,
+                    'weight': float
+                },
+            },
+            ...
+        ],
+        'deliveryType': kwargs['delivery_type'],
+        'shipment': {
+            'date': str,
+            'type': str,
+            'partnerId': int,
+            'warehouseId': int,
+            'includeNonDefault': bool
+        },
+        'cost': {
+            'assessedValue': float,
+            'itemsSum': float,
+            'manualDeliveryForCustomer': float,
+            'fullyPrepaid': bool
+        },
+        'settings': {
+            'useHandlingTime': bool,
+            'useWarehousesSchedule': bool,
+            'showDisabledOptions': bool,
+        },
+        'tariffId': int,
+        'desiredDeliveryDate': str
     }
     return template

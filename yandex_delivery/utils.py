@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Iterable
 from .Dataclasses import Item, RoutePoint
 
 
@@ -11,3 +11,12 @@ def unpack_items(items: List[Item]) -> list[dict]:
 def unpack_route_points(route_points: List[RoutePoint]) -> list[dict]:
     return [{'coordinates': point.coordinates if point.coordinates else [],
              'fullname': point.fullname if point.fullname else ''} for point in route_points]
+
+
+def calc_dimensions(items: Iterable[Item]):
+    dimension = {
+        'length': sum(i.size['length'] for i in items),
+        'width': sum(i.size['width'] for i in items),
+        'height': sum(i.size['height'] for i in items),
+        'weight': sum(i.weight for i in items)
+    }
