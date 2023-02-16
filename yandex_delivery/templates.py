@@ -1,5 +1,5 @@
-from .handlers import unpack_items, unpack_route_points
 from typing import Union
+from .utils import unpack_items, unpack_route_points
 
 
 def create_order_template():
@@ -18,13 +18,28 @@ def check_price_template(**kwargs) -> dict:
             'taxi_class': kwargs['taxi_class'],
             'same_day_data': {
                 'delivery_interval': {
-                    'from': '2023-01-01T00:00:00+00:00', # need to get from user
-                    'to': '2023-02-01T00:00:00+00:00', # also
+                    'from': '2023-01-01T00:00:00+00:00',  # need to get from user
+                    'to': '2023-02-01T00:00:00+00:00',  # also
                 }
             }
 
         },
         'route_points': unpack_route_points(kwargs['route_points']),
         'skip_door_to_door': kwargs['skip_door_to_door']
+    }
+    return template
+
+
+def get_intervals_during_day_template(**kwargs) -> dict:
+    template = {
+        'fullname': kwargs['fullname'],
+        'start_point': kwargs['start_point'],
+    }
+    return template
+
+def get_tariffs_template(**kwargs) -> dict:
+    template = {
+        'fullname': kwargs['fullname'],
+        'start_point': kwargs['start_point'],
     }
     return template

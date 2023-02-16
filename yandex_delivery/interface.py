@@ -19,3 +19,18 @@ class YandexDeliveryInterface(ABC):
                     ) -> dict:
         """Первичная оценка стоимости без создания заявки"""
         raise NotImplementedError()
+
+    def get_intervals_during_day(self, fullname: str, start_point: List[float]) -> dict:
+        """В ответе возвращается список услуг, доступных в точке, с учетом их опций.
+Ответ состоит из двух объектов:
+
+express_delivery — содержит доступные тарифы и опции для "Экспресс-доставки"
+same_day_delivery — содержит доступные интервалы для доставки "В течение дня"
+Каждый из объектов содержит поле allowed, которое обозначает доступность данного режима доставки."""
+        raise NotImplementedError
+
+    def get_tariffs(self, fullname: str, start_point: List[float]) -> dict:
+        """Получение тарифов, доступных в точке
+В ответе в поле supported_requirements возвращаются возможные дополнительные требования."""
+        raise NotImplementedError
+

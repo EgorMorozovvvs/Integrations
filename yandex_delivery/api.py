@@ -7,6 +7,7 @@ from .templates import *
 from .interface import YandexDeliveryInterface
 
 BASE_URL = 'https://b2b.taxi.tst.yandex.net/'
+TEST_BASE_URL = 'https://b2b.taxi.tst.yandex.net/'
 test_bearer = 'y2_AgAAAAD0Wcn4AAAPeAAAAAACJXtV-u9qs8IzQzWzJ0Cdt9pv-Wh1YS8'
 
 
@@ -30,4 +31,17 @@ class YandexDelivery(YandexDeliveryInterface):
                     ) -> dict:
         current_data = check_price_template(**locals())
         url = 'b2b/cargo/integration/v2/check-price'
-        return requests.post(BASE_URL + url, headers=self.headers, data=json.dumps(current_data)).json()
+        return requests.post(TEST_BASE_URL + url, headers=self.headers, data=json.dumps(current_data)).json()
+
+    def get_intervals_during_day(self, fullname: str, start_point: List[float]):
+        current_data = get_intervals_during_day_template(**locals())
+        url = 'b2b/cargo/integration/v2/delivery-methods'
+        return requests.post(TEST_BASE_URL + url, headers=self.headers, data=json.dumps(current_data)).json()
+
+    def get_tariffs(self, fullname: str, start_point: List[float]) -> dict:
+        current_data = get_tariffs_template(**locals())
+        url = 'b2b/cargo/integration/v2/tariffs'
+        return requests.post(TEST_BASE_URL + url, headers=self.headers, data=json.dumps(current_data)).json()
+
+
+# TODO разобраться с start_point
