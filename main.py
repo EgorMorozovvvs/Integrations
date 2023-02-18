@@ -1,9 +1,8 @@
 # from yandex_delivery import get_delivery_price
-from dostavista import get_delivery_price
-
-
-test_bearer = 'y2_AgAAAAD0Wcn4AAAPeAAAAAACJXtV-u9qs8IzQzWzJ0Cdt9pv-Wh1YS8'
+from crm.moysklad.moysklad import MoySklad
 
 
 if __name__ == '__main__':
-	print(get_delivery_price(''))
+	ms = MoySklad()
+	ms.authorize(login='', password='')
+	print(ms.get_assortment())
