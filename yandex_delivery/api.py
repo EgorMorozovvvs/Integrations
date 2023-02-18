@@ -1,6 +1,6 @@
 import json
 import requests
-from typing import List
+from typing import List, Dict
 
 from .Dataclasses import Item, RoutePoint
 from .templates import *
@@ -59,9 +59,18 @@ class YandexDelivery(YandexDeliveryInterface):
         }
         return requests.post(TEST_BASE_URL + url, headers=self.headers, data=json.dumps(current_data)).json()
 
-    def get_available_points_of_self_delivery(self) -> dict:
+    def get_available_points_of_self_delivery(self,
+                                              available_for_dropoff: bool = False,
+                                              latitude: Dict[str, float] = None,
+                                              longitude: Dict[str, float] = None,
+                                              payment_method: str = '',
+                                              payment_methods: List[str] = None,
+                                              pickup_points_ids: List[str] = None,
+                                              type: str = '') -> dict:
+        current_data = get_available_points_of_self_delivery_template(**locals())
+        print(current_data)
         url = '/api/b2b/platform/pickup-points/list'
-        return requests.post(TEST_BASE_URL + url, headers=self.headers).json()
+        return requests.post(TEST_BASE_URL + url, headers=self.headers, data=json.dumps(current_data)).json()
 
 
 

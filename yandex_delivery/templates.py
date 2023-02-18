@@ -86,3 +86,20 @@ def search_ways_of_delivery_templates(**kwargs) -> dict:
         'desiredDeliveryDate': str
     }
     return template
+
+
+def get_available_points_of_self_delivery_template(**kwargs) -> dict:
+    template = {
+        'available_for_dropoff': kwargs['available_for_dropoff'],
+        'latitude': kwargs['latitude'],
+        'longitude': kwargs['longitude'],
+        'payment_method': kwargs['payment_method'],
+        'payment_methods': kwargs['payment_methods'],
+        'pickup_points_ids': kwargs['pickup_points_ids'],
+        'type': kwargs['type']
+    }
+    for key in kwargs:
+        if not kwargs[key]:
+            template.pop(key)
+
+    return template
