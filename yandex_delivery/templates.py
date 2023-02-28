@@ -1,10 +1,4 @@
-from typing import Union
-from .utils import unpack_items, unpack_route_points
-
-
-def create_order_template():
-    template = {}
-    return template
+from .utils import unpack_items, unpack_route_points, pop_if_value_none
 
 
 def check_price_template(**kwargs) -> dict:
@@ -18,8 +12,8 @@ def check_price_template(**kwargs) -> dict:
             'taxi_class': kwargs['taxi_class'],
             'same_day_data': {
                 'delivery_interval': {
-                    'from': '2023-01-01T00:00:00+00:00',  # need to get from user
-                    'to': '2023-02-01T00:00:00+00:00',  # also
+                    'from': '2023-01-01T00:00:00+00:00',
+                    'to': '2023-02-01T00:00:00+00:00',
                 }
             }
 
@@ -88,6 +82,7 @@ def search_ways_of_delivery_templates(**kwargs) -> dict:
     return template
 
 
+@pop_if_value_none
 def get_available_points_of_self_delivery_template(**kwargs) -> dict:
     template = {
         'available_for_dropoff': kwargs['available_for_dropoff'],
@@ -98,8 +93,140 @@ def get_available_points_of_self_delivery_template(**kwargs) -> dict:
         'pickup_points_ids': kwargs['pickup_points_ids'],
         'type': kwargs['type']
     }
-    for key in kwargs:
-        if not kwargs[key]:
-            template.pop(key)
 
+    return template
+
+
+def pricing_calculator_template(**kwargs) -> dict:
+    template = {
+        'client_price': kwargs['client_price'],
+        'destination': kwargs['destination'],
+        'payment_method': kwargs['payment_method'],
+        'source': kwargs['source'],
+        'tariff': kwargs['tariff'],
+        'total_assessed_price': kwargs['total_assessed_price'],
+        'total_weight': kwargs['total_weight']
+    }
+    return template
+
+
+def create_order_template(**kwargs) -> dict:
+    template = {
+        'billing_info': {
+            'delivery_cost': int,
+            'payment_method': str,
+        },
+        'destination': {
+            'custom_location': {
+                'details': {
+                    'comment': str,
+                    'full_address': str,
+                    'room': str,
+                },
+                'latitude': float,
+                'longitude': float,
+            },
+            'interval': {
+                'from': float,
+                'to': float
+            },
+            'interval_utc': {
+                'from': str,
+                'to': str
+            },
+            'platform_station': {
+                'platform_id': str
+            },
+            'type': str
+        },
+        'info': {
+            'comment': str,
+            'operator_request_id': str
+        },
+        'items': [
+            {
+                'article': str,
+                'billing_details': {
+                    'assessed_unit_price': int,
+                    'inn': str,
+                    'nds': int,
+                    'unit_price': int
+                },
+                'count': int,
+                'making_code': str,
+                'name': str,
+                'physical_dims': {
+                    'dx': int,
+                    'dy': int,
+                    'dz': int
+                },
+                'place_barcode': str,
+                'uin': str
+            }
+        ],
+        'last_mile_policy': str,
+        'particular_items_refuse': bool,
+        'places': [
+            {
+                'barcode': str,
+                'description': str,
+                'physical_dims': {
+                    'dx': int,
+                    'dy': int,
+                    'dz': int,
+                    'predefined_volume': int,
+                    'weight_gross': int
+                }
+            }
+        ],
+        'recipient_info': {
+            'email': str,
+            'first_name': str,
+            'last_name': str,
+            'partonymic': str,
+            'phone': str
+        },
+        'source': {
+            'platform_station': {
+                'platform_id': str
+            }
+        }
+    }
+    return template
+
+
+def get_intervals_of_new_place_template(**kwargs) -> dict:
+    template = {
+        'destination': {
+            'custom_location': {
+                'details': {
+                    'comment': str,
+                    'full_address': str,
+                    'room': str
+                },
+                'latitude': float,
+                'longitude': float
+            },
+            'interval': {
+                'from': int,
+                'to': int
+            },
+            'interval_utc': {
+                'from': int,
+                'to': int
+            },
+            'platform_station': {
+                'platform_id': str
+            },
+            'type': str
+        },
+        'request_id': str
+    }
+    return template
+
+
+def cancel_order_template(**kwargs) -> dict:
+    template = {
+        'request_id': kwargs['request_id']
+    }
     return template

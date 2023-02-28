@@ -1,6 +1,6 @@
 import json
 import requests
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from .Dataclasses import Item, RoutePoint
 from .templates import *
@@ -44,34 +44,53 @@ class YandexDelivery(YandexDeliveryInterface):
         url = 'b2b/cargo/integration/v2/tariffs'
         return requests.post(TEST_BASE_URL + url, headers=self.headers, data=json.dumps(current_data)).json()
 
-    def search_ways_of_delivery(self,
-                                sender_id: int) -> dict:
-        ...
-
-    def find_full_address(self, term: str): # BAD
-        url = f'/location?term={term}'
-        return requests.get(BASE_URL + url, headers=self.headers).json()
-
     def get_identifier(self, location: str):
-        url = '/api/b2b/platform/location/detect'
+        url = 'api/b2b/platform/location/detect'
         current_data = {
             'location': location
         }
         return requests.post(TEST_BASE_URL + url, headers=self.headers, data=json.dumps(current_data)).json()
 
     def get_available_points_of_self_delivery(self,
-                                              available_for_dropoff: bool = False,
+                                              available_for_dropoff: bool = None,
                                               latitude: Dict[str, float] = None,
                                               longitude: Dict[str, float] = None,
-                                              payment_method: str = '',
+                                              payment_method: str = None,
                                               payment_methods: List[str] = None,
                                               pickup_points_ids: List[str] = None,
-                                              type: str = '') -> dict:
+                                              type: str = None) -> dict:
         current_data = get_available_points_of_self_delivery_template(**locals())
-        print(current_data)
-        url = '/api/b2b/platform/pickup-points/list'
+        url = 'api/b2b/platform/pickup-points/list'
         return requests.post(TEST_BASE_URL + url, headers=self.headers, data=json.dumps(current_data)).json()
 
+    def pricing_calculator(self,
+                           tariff: str,
+                           total_weight: int,
+                           source: Dict[str, str],
+                           destination: Dict[str, str],
+                           client_price: int = None,
+                           payment_method: str = None,
+                           total_assessed_price: int = None,
+                           ) -> dict:
+        current_data = pricing_calculator_template(**locals())
+        url = 'api/b2b/platform/pricing-calculator'
+        return requests.post(TEST_BASE_URL + url, headers=self.headers, data=json.dumps(current_data)).json()
 
+    def get_intervals(self,
+                      station_id: str,
+                      full_address: str = None,
+                      geo_id: int = None,
+                      self_pickup_id: str = None,
+                      send_unix: bool = None,
+                      last_mile_policy: str = 'time_interval') -> dict:
+        url = f'api/b2b/platform/offers/info?station_id={station_id}'
+        for key, value in locals().items():
+            if value is not None:
+                url += f'&{key}={value}'
+        # TODO error 'debug_message': '/handlers.api.b2b.platform.offers.info.multiple station_id are specified'
+        return requests.get(TEST_BASE_URL + url, headers=self.headers).json()
 
-# TODO разобраться с start_point
+    def find_full_address(self, term: str) -> dict:
+        url = f'/location?term={term}'
+        return requests.get(TEST_BASE_URL + url, headers=self.headers).json()
+

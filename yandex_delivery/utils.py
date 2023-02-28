@@ -20,3 +20,14 @@ def calc_dimensions(items: Iterable[Item]):
         'height': sum(i.size['height'] for i in items),
         'weight': sum(i.weight for i in items)
     }
+
+
+def pop_if_value_none(func):
+    def inner(**kwargs):
+        template = func(**kwargs)
+        for key in kwargs:
+            if kwargs[key] is None:
+                template.pop(key)
+        return template
+
+    return inner
