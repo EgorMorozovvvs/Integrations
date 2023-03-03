@@ -28,10 +28,24 @@ class Qiwi:
 		:return: Текущий баланс аккаунта, принимающего платежи
 		"""
 		response = self.__session.get(
-			url=self.__base_url + f'funding-sources/v2/persons/{self.phone}/accounts'
-		).json()
+			url=self.__base_url + f'funding-sources/v2/persons/{self.phone}/accounts').json()
 		balance = response['accounts'][0]['balance']['amount']
 		return round(float(balance), 2)
+
+	def get_full_balance(self) -> dict:
+		balance = self.__session.get(
+			url=self.__base_url + f'funding-sources/v2/persons/{self.phone}/accounts')
+		return balance.json()
+
+	def get_payment_history(self, rows_count=5):
+		params = {
+			'rows': str(rows_count),
+			'nextTxnId': '',
+			'nextTxnDate': ''}
+		data = self.__session.get(
+			url=self.__base_url + f'payment-history/v2/persons/{self.phone}/payments',
+			params=params)
+		return data.json()
 
 	def transfer(
 			self,
@@ -66,8 +80,7 @@ class Qiwi:
 				'accountId': str(currency),
 			},
 			'comment': comment,
-			'fields': {'account': wallet_address_to_transfer}
-		}
+			'fields': {'account': wallet_address_to_transfer}}
 		response = self.__session.post(
 			url=self.__base_url + 'sinap/api/v2/terms/99/payments',
 			json=json).json()
